@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Meus Apps</title>
+
+  <meta name="description" content="Atalhos rápidos para todos os meus apps pessoais.">
+  <meta name="theme-color" id="theme-color-meta" content="#FAF9F7">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Meus Apps">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
+
+  <style>
+    /* layout: 2-col mobile grid, expanding on wider screens */
+    :root {
+      --bg: #FAF9F7;
+      --bg2: #F0EEE9;
+      --surface: #FFFFFF;
+      --border: rgba(0,0,0,0.08);
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+      --shadow-hover: 0 4px 12px rgba(0,0,0,0.10), 0 8px 32px rgba(0,0,0,0.07);
+      --fg: #1A1714;
+      --fg2: #6B6560;
+      --fg3: #A09B95;
+      --radius: 20px;
+      --font: 'Figtree', system-ui, sans-serif;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #131211;
+        --bg2: #1C1B19;
+        --surface: #1F1E1C;
+        --border: rgba(255,255,255,0.07);
+        --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+        --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.3);
+        --fg: #F0EDE8;
+        --fg2: #9B9590;
+        --fg3: #625E59;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #131211;
+      --bg2: #1C1B19;
+      --surface: #1F1E1C;
+      --border: rgba(255,255,255,0.07);
+      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+      --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.3);
+      --fg: #F0EDE8;
+      --fg2: #9B9590;
+      --fg3: #625E59;
+      color-scheme: dark;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+      padding-block: 32px;
+      padding-top: calc(32px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      max-width: 760px;
+      margin-inline: auto;
+    }
+
+    .wordmark {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+    }
+
+    .wordmark span {
+      color: var(--fg3);
+      font-weight: 400;
+    }
+
+    .theme-toggle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: var(--font);
+      color: var(--fg2);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .theme-toggle:hover { background: var(--bg2); color: var(--fg); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 540px) {
+      .grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    }
+
+    @media (min-width: 760px) {
+      .grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 16px 16px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s ease;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app-card:hover, .app-card:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .app-card:active {
+      transform: translateY(0px) scale(0.97);
+      transition-duration: 0.08s;
+    }
+
+    .app-card:focus-visible {
+      outline: 2px solid var(--accent, #8B5CF6);
+      outline-offset: 2px;
+    }
+
+    .app-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .app-info { width: 100%; }
+
+    .app-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fg);
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      margin-bottom: 3px;
+    }
+
+    .app-desc {
+      font-size: 11.5px;
+      color: var(--fg2);
+      line-height: 1.4;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--fg3);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .app-card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark">meus apps<span> · jhenni</span></div>
+  <button class="theme-toggle" id="themeBtn" aria-label="Alternar tema">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <span>tema</span>
+  </button>
+</header>
+
+<main class="grid" role="list">
+
+  <!-- Imagem → PDF -->
+  <a href="https://converte-nnquaresma.vercel.app" target="_blank" rel="noopener" class="app-card" role="listitem" style="--accent:#3B82F6">
+    <div class="app-icon" style="background:#EFF6FF">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="3" y="4" width="14" height="14" rx="2.5" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1.5"/>
+        <circle cx="7.5" cy="8" r="1.5" fill="#3B82F6"/>
+        <path d="M3 14 L7 11 L10 13.5 L13.5 9.5 L17 14" stroke="#3B82F6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M19 10 L23 14" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M21.5 11.5 L23 14 L20.5 14" fill="#3B82F6"/>
+        <rect x="18" y="15" width="8" height="10" rx="1.5" fill="#3B82F6" opacity="0.9"/>
+        <line x1="20" y1="18" x2="24" y2="18" stroke="white" stroke-width="1" stroke-linecap="round"/>
+        <line x1="20" y1="20.5" x2="24" y2="20.5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="app-info">
+      <div class="app-name">Imagem → PDF</div>
+      <div class="app-desc">Converte fotos e imagens em PDF</div>
+    </div>
+  </a>
+
+  <!-- UTM Link -->
+  <a href="https://utm-nnquaresma.vercel.app" target="_blank" rel="noopener" class="app-card" role="listitem" style="--accent:#D97706">
+    <div class="app-icon" style="background:#FFFBEB">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M11 17 L7.5 17 C5.01 17 3 14.99 3 12.5 C3 10.01 5.01 8 7.5 8 L11 8" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M17 8 L20.5 8 C22.99 8 25 10.01 25 12.5 C25 14.99 22.99 17 20.5 17 L17 17" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="9" y1="12.5" x2="19" y2="12.5" stroke="#D97706" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="20" cy="20" r="5.5" fill="#FDE68A" stroke="#D97706" stroke-width="1.3"/>
+        <text x="20" y="23.5" text-anchor="middle" font-size="7" font-weight="700" fill="#92400E" font-family="monospace">?</text>
+      </svg>
+    </div>
+    <div class="app-info">
+      <div class="app-name">UTM Link</div>
+      <div class="app-desc">Gera links com parâmetros UTM</div>
+    </div>
+  </a>
+
+  <!-- Criador de Livretos -->
+  <a href="https://livretos-nnquaresma.vercel.app" target="_blank" rel="noopener" class="app-card" role="listitem" style="--accent:#7C3AED">
+    <div class="app-icon" style="background:#F5F3FF">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 6 C14 6 10 5 5 6.5 L5 22.5 C10 21 14 22 14 22 C14 22 18 21 23 22.5 L23 6.5 C18 5 14 6 14 6 Z" fill="#DDD6FE" stroke="#7C3AED" stroke-width="1.4" stroke-linejoin="round"/>
+        <line x1="14" y1="6" x2="14" y2="22" stroke="#7C3AED" stroke-width="1.4"/>
+        <line x1="7" y1="10" x2="12" y2="9.5" stroke="#7C3AED" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="7" y1="13" x2="12" y2="12.5" stroke="#7C3AED" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="7" y1="16" x2="12" y2="15.5" stroke="#7C3AED" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="16" y1="9.5" x2="21" y2="10" stroke="#7C3AED" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="16" y1="12.5" x2="21" y2="13" stroke="#7C3AED" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+        <line x1="16" y1="15.5" x2="21" y2="16" stroke="#7C3AED" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="app-info">
+      <div class="app-name">Criador de Livretos</div>
+      <div class="app-desc">Monta PDFs em formato livreto</div>
+    </div>
+  </a>
+
+  <!-- CRM -->
+  <a href="https://crm-nnquaresma.vercel.app" target="_blank" rel="noopener" class="app-card" role="listitem" style="--accent:#059669">
+    <div class="app-icon" style="background:#ECFDF5">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="9" r="3.5" fill="#A7F3D0" stroke="#059669" stroke-width="1.4"/>
+        <path d="M6.5 22 C6.5 18.41 9.91 15.5 14 15.5 C18.09 15.5 21.5 18.41 21.5 22" stroke="#059669" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="22.5" cy="8" r="2.5" fill="#A7F3D0" stroke="#059669" stroke-width="1.2"/>
+        <path d="M20 17.5 C21 16.8 22.2 16.5 23.5 17 C25 17.5 26 18.8 26 20" stroke="#059669" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+        <circle cx="5.5" cy="8" r="2.5" fill="#A7F3D0" stroke="#059669" stroke-width="1.2"/>
+        <path d="M8 17.5 C7 16.8 5.8 16.5 4.5 17 C3 17.5 2 18.8 2 20" stroke="#059669" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="app-info">
+      <div class="app-name">CRM</div>
+      <div class="app-desc">Gestão de clientes e contatos</div>
+    </div>
+  </a>
+
+  <!-- Miolo App -->
+  <a href="https://miolo-nnquaresma.vercel.app" target="_blank" rel="noopener" class="app-card" role="listitem" style="--accent:#EA580C">
+    <div class="app-icon" style="background:#FFF7ED">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="5" y="4" width="18" height="20" rx="2.5" fill="#FED7AA" stroke="#EA580C" stroke-width="1.4"/>
+        <circle cx="9" cy="4.5" r="1.5" fill="#EA580C"/>
+        <circle cx="14" cy="4.5" r="1.5" fill="#EA580C"/>
+        <circle cx="19" cy="4.5" r="1.5" fill="#EA580C"/>
+        <line x1="9" y1="9" x2="19" y2="9" stroke="#EA580C" stroke-width="1.1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="9" y1="12" x2="19" y2="12" stroke="#EA580C" stroke-width="1.1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="9" y1="15" x2="15" y2="15" stroke="#EA580C" stroke-width="1.1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="9" y1="18" x2="17" y2="18" stroke="#EA580C" stroke-width="1.1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="9" y1="21" x2="13" y2="21" stroke="#EA580C" stroke-width="1.1" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="app-info">
+      <div class="app-name">Miolo de Agenda</div>
+      <div class="app-desc">Cria miolo de agenda em PDF</div>
+    </div>
+  </a>
+
+  <!-- Limbo Financeiro -->
+  <a href="https://limbo.nnquaresma.com" target="_blank" rel="noopener" class="app-card" role="listitem" style="--accent:#DB2777">
+    <div class="app-icon" style="background:#FDF2F8">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 4 L16.5 9.5 L22.5 10.3 L18.25 14.4 L19.3 20.4 L14 17.5 L8.7 20.4 L9.75 14.4 L5.5 10.3 L11.5 9.5 Z" fill="#FBCFE8" stroke="#DB2777" stroke-width="1.3" stroke-linejoin="round"/>
+        <text x="14" y="27" text-anchor="middle" font-size="7.5" font-weight="700" fill="#DB2777" font-family="monospace">R$</text>
+      </svg>
+    </div>
+    <div class="app-info">
+      <div class="app-name">Limbo Financeiro</div>
+      <div class="app-desc">Rastreio de contas e saldo</div>
+    </div>
+  </a>
+
+  <!-- Minura -->
+  <a href="https://app.minura.art" target="_blank" rel="noopener" class="app-card" role="listitem" style="--accent:#E11D48">
+    <div class="app-icon" style="background:#FFF1F2">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 14 C14 14 8 8 4 9 C2 9.5 3 13 5 14 C7 15 10 13.5 14 14 Z" fill="#FECDD3" stroke="#E11D48" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M14 14 C14 14 20 8 24 9 C26 9.5 25 13 23 14 C21 15 18 13.5 14 14 Z" fill="#FECDD3" stroke="#E11D48" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M14 14 C14 14 9 18 10.5 21 C11.5 23 14 22 14 14 Z" fill="#FDA4AF" stroke="#E11D48" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M14 14 C14 14 19 18 17.5 21 C16.5 23 14 22 14 14 Z" fill="#FDA4AF" stroke="#E11D48" stroke-width="1.2" stroke-linejoin="round"/>
+        <ellipse cx="14" cy="14" rx="1.2" ry="3" fill="#E11D48"/>
+        <path d="M13.5 11 Q11 7 9 6" stroke="#E11D48" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <path d="M14.5 11 Q17 7 19 6" stroke="#E11D48" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <circle cx="9" cy="6" r="1" fill="#E11D48"/>
+        <circle cx="19" cy="6" r="1" fill="#E11D48"/>
+      </svg>
+    </div>
+    <div class="app-info">
+      <div class="app-name">Minura</div>
+      <div class="app-desc">Papelaria personalizada</div>
+    </div>
+  </a>
+
+</main>
+
+<footer>
+  <p>Toque para abrir · Salve na tela inicial para acesso rápido</p>
+</footer>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const metaTheme = document.getElementById('theme-color-meta');
+  const labels = { system: 'sistema', dark: 'escuro', light: 'claro' };
+
+  function getSystemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme) {
+    if (theme === 'system') {
+      root.removeAttribute('data-theme');
+    } else {
+      root.setAttribute('data-theme', theme);
+    }
+    const isDark = theme === 'dark' || (theme === 'system' && getSystemTheme() === 'dark');
+    metaTheme.content = isDark ? '#131211' : '#FAF9F7';
+    btn.querySelector('span').textContent = labels[theme] || 'tema';
+    try { localStorage.setItem('theme', theme); } catch(e) {}
+  }
+
+  let current = 'system';
+  try { current = localStorage.getItem('theme') || 'system'; } catch(e) {}
+  applyTheme(current);
+
+  btn.addEventListener('click', () => {
+    const cycle = { system: 'dark', dark: 'light', light: 'system' };
+    current = cycle[current] || 'system';
+    applyTheme(current);
+  });
+</script>
+
+</body>
+</html>
